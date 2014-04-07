@@ -1,19 +1,24 @@
 /**
  * My Client Application
  */
-angular.module('client', ['stripe'])
+angular.module('client', [])
     .controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
         'use strict';
-        $scope.mySillyText = "Welcome to Brian's Awesome Products";
-        $scope.saveCustomer = function stripeResponseHandler(status, response) {
-            if (response.error) {
-                // show the errors on the form
-                $(".payment-errors").text(response.error.message);
-            } else {
-                var token = response.id;
-                $http.post('/stripe', {stripeToken: token});
-            }
+        $scope.mySillyText = "Get your bananas!";
+        $scope.popAlert = function() {
+          alert('hello');
+        };
+        $scope.priceMessage ="";
+        $scope.bananaType = "";
+
+        $scope.checkPrice = function(aBananaType){
+          $scope.bananaType = aBananaType;
+          $http.get('/checkPrice', {params: {bananaType: aBananaType} })
+              .success(function (response) {
+                  $scope.priceMessage = response.price;
+              });
+
         };
     }]).run([function () {
-        Stripe.setPublishableKey('pk_test_Cg7dxMFhOjXhdtows9LKrvbN');
+
     }]);
